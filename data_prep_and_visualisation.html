@@ -364,6 +364,7 @@ SitRep: Acute Time series 3 December 2018 to 3 March 2019 (XLSX,
 1480kB)</a></p>
 <p>Visualisation tools: R packages <strong>circilize</strong> <a href="https://github.com/jokergoo/circlize">https://github.com/jokergoo/circlize</a>
 and <strong>ComplexHeatmap</strong> (Bioconductor)</p>
+<p><br></p>
 <div id="winter-critical-care-hospital-occupancy-in-bristol-for-adults-children-and-babies-2018-2019-pre-covid" class="section level2">
 <h2>Winter critical care hospital occupancy in Bristol for adults,
 children, and babies (2018-2019, pre-COVID)</h2>
@@ -402,14 +403,18 @@ city, and at Weston-super-Mare.</p>
 <h3>Analysis</h3>
 <p>We are going to look at critical care bed occupance for adults,
 children (&lt;14 years), and babies (&lt;6 months) in these trusts.</p>
-<pre class="r"><code>library(dplyr)
+<pre class="r"><code>library(dplyr, warn.conflicts=FALSE)
 library(tidyr)
 library(tibble)
-library(lubridate)
+suppressPackageStartupMessages(library(lubridate))
 library(openxlsx)
 
-library(ComplexHeatmap)
-library(circlize) 
+suppressPackageStartupMessages(library(ComplexHeatmap))
+suppressPackageStartupMessages(library(circlize))
+
+# options for jupyter
+options(warn=-1)
+options(jupyter.plot_scale=1)
 
 filename =&quot;Winter-data-timeseries-20190307.xlsx&quot;</code></pre>
 <div id="load-data" class="section level4">

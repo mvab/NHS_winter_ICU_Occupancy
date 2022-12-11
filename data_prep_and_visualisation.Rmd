@@ -20,6 +20,7 @@ Data from NHS England: [Winter SitRep: Acute Time series 3 December 2018 to 3 Ma
 Visualisation tools: R packages **circilize** [https://github.com/jokergoo/circlize](https://github.com/jokergoo/circlize) and **ComplexHeatmap** (Bioconductor)
 
 <br>
+
 ## Winter critical care hospital occupancy in Bristol for adults, children, and babies (2018-2019, pre-COVID)
 
 ### Background
@@ -53,14 +54,18 @@ We are going to look at critical care bed occupance for adults, children (<14 ye
 
 
 ```{r}
-library(dplyr)
+library(dplyr, warn.conflicts=FALSE)
 library(tidyr)
 library(tibble)
-library(lubridate)
+suppressPackageStartupMessages(library(lubridate))
 library(openxlsx)
 
-library(ComplexHeatmap)
-library(circlize) 
+suppressPackageStartupMessages(library(ComplexHeatmap))
+suppressPackageStartupMessages(library(circlize))
+
+# options for jupyter
+options(warn=-1)
+options(jupyter.plot_scale=1)
 
 filename ="Winter-data-timeseries-20190307.xlsx"
 ```
