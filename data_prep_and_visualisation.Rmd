@@ -2,32 +2,34 @@
 title: "P4 winter data visualization challenge"
 author: "Marina Vabistsevits"
 date: "`r Sys.Date()`"
-output: html_document
+output:
+  html_document: default
 ---
 
 ```{r setup I, eval=TRUE, echo=F, message = F, warning = F, comment=""}
 knitr::opts_chunk$set(eval = TRUE, include = T, message = F, warning = F, comment="")
 # to convert this rmd to ipynb
-#rmd2jupyter::rmd2jupyter("eda.Rmd")
+#rmd2jupyter::rmd2jupyter("data_prep_and_visualisation.Rmd")
 ```
 
 <br>
 
+## Winter critical care hospital occupancy in Bristol for adults, children, and infants (2018-2019, pre-COVID)
+
+
 Challenge details: [https://github.com/MRCIEU/P4winter-viz-challenge](https://github.com/MRCIEU/P4winter-viz-challenge)
 
-Data from NHS England: [Winter SitRep: Acute Time series 3 December 2018 to 3 March 2019 (XLSX, 1480kB)](https://wCww.england.nhs.uk/statistics/statistical-work-areas/winter-daily-sitreps/winter-daily-sitrep-2018-19-data/)
+Data from NHS England: [Winter SitRep: Acute Time series 3 December 2018 to 3 March 2019 (XLSX, 1480kB)](https://www.england.nhs.uk/statistics/statistical-work-areas/winter-daily-sitreps/winter-daily-sitrep-2018-19-data/)
 
-Visualisation tools: R packages **circilize** [https://github.com/jokergoo/circlize](https://github.com/jokergoo/circlize) and **ComplexHeatmap** (Bioconductor)
+Visualisation tools: R packages **circilize** ([https://github.com/jokergoo/circlize](https://github.com/jokergoo/circlize)) and **ComplexHeatmap** (Bioconductor)
 
 <br>
-
-## Winter critical care hospital occupancy in Bristol for adults, children, and babies (2018-2019, pre-COVID)
 
 ### Background
 
 The dataset contains critical care bed occupancy in all NHS Trusts across England, December 2018-February 2019 (pre-COVID data). 
 
-In this analysis/visulisation I will focus on Bristol data only. Hospitals in Bristol are belong to two NHS Trusts - _North Bristol NHS Trust_ and _University Hospitals Bristol and Weston NHS Foundation Trust_, which cover north and centre/south of the city, respectively. For context, below is list of hostpitals that belong to the two trusts [[source](https://en.wikipedia.org/wiki/Healthcare_in_Bristol)]:
+In this analysis/visulisation I will focus on Bristol data only. Hospitals in Bristol are split between two NHS Trusts - _North Bristol NHS Trust_ and _University Hospitals Bristol and Weston NHS Foundation Trust_, which cover north and centre/south of the city, respectively. For context, below is list of hostpitals that belong to the two trusts [[source](https://en.wikipedia.org/wiki/Healthcare_in_Bristol)]:
 
 
 North Bristol NHS Trust  (**NBT**) manages hospitals in the north of the Bristol and South Gloucestershire.
@@ -50,15 +52,15 @@ University Hospitals Bristol and Weston NHS Foundation Trust (**UHB**) manages h
 
 ### Analysis
 
-We are going to look at critical care bed occupance for adults, children (<14 years), and babies (<6 months) in these trusts. 
+We are going to look at critical care bed occupancy for adults, children (<14 years), and infants (<6 months) in these two Bristol-based NHS Trusts (NBT & UHB), and visualise how occupancy changed over the winter months (especially during the holidays period! `r emo::ji("christmas")`)
 
 
 ```{r}
 library(dplyr, warn.conflicts=FALSE)
 library(tidyr)
 library(tibble)
-suppressPackageStartupMessages(library(lubridate))
 library(openxlsx)
+suppressPackageStartupMessages(library(lubridate))
 
 suppressPackageStartupMessages(library(ComplexHeatmap))
 suppressPackageStartupMessages(library(circlize))
@@ -72,7 +74,7 @@ filename ="Winter-data-timeseries-20190307.xlsx"
 
 #### Load data
 
-Reading the xls files and converting the data to the long format.
+Reading the xls file and converting the data into the long format.
 ```{r}
 # functions 
 load_data <- function(file, sheet){
@@ -176,7 +178,7 @@ plot_circular_heatmap <- function(df,  title_prefix){
       split <- df$split
       df<- df$wide_data
     
-      # create color paletter green-white-red (min to max occupancy)
+      # create color palette green-white-red (min to max occupancy)
       vals <- c(df$`\nNBT`, df$`UHB`)
       min <- round(min(vals[!is.na(vals)]),1)
       mid = (1+min)/2
@@ -211,8 +213,18 @@ plot_circular_heatmap <- function(df,  title_prefix){
 ### Adult critical care
 ```{r}
 plot_circular_heatmap(df=dat_adult_bristol,  "Adult critical care")
-  
+```
 
+ - UBH was very busy during the entire winter season (mean occupancy 93%) 
+ - The only days with occupancy < 80% at UHB were Christmas and Boxing Days `r emo::ji("christmas")`
+ - NBT was busy too (mean occupancy 76%), but there were less people in critical care in NBT over the entire holiday season (~ 20-Dec to 6-Jan) `r emo::ji("christmas")`)
+
+
+```{r}
+# mean occupancy
+round(colMeans(dat_adult_bristol$wide_data),2)
+
+# show the total number of available beds in each NHS Trust
 dat_adult_bristol$full_bristol_data  %>% 
   select(Name, abbr, variable, open_beds = value) %>% 
   mutate(abbr = gsub("\n", "", abbr)) %>% 
@@ -228,33 +240,69 @@ Children (< 14 years)
 dat_child <- load_data(file = filename,  sheet = "Paediatric intensive care")
 dat_child_bristol <- process_data(dat_child)
 plot_circular_heatmap(df=dat_child_bristol,  "Paedeatric \nintensive care")
+```
 
+- Paediatric intensive care in Bristol is only available at UHB (likely at he _Bristol Royal Hospital for Children_)
+- Therefore, no data is presented for NBT in the plot
+- There was quite "low" bed occupancy in the paediatric unit between 25-Dec and 7-Jan: < 50% `r emo::ji("christmas")` `r emo::ji("christmas")` `r emo::ji("christmas")`
 
+```{r}
+# mean occupancy
+round(colMeans(dat_child_bristol$wide_data),2)
+
+# show the total number of available beds in each NHS Trust
 dat_child_bristol$full_bristol_data  %>% 
   select(Name, abbr, variable, open_beds = value) %>% 
   filter(variable == "Paed Int Care Open") %>% 
   mutate(abbr = gsub("\n", "", abbr)) %>% 
   count(Name, abbr, open_beds) %>% select(-n)
-
 ```
 
-<br>
 
 
-### Neonatal intensive care
 
-Babies (< 6 months)
+### Neonatal intensive care (NICU)
+
+Infants (< 6 months)
 ```{r}
-
 dat_baby <- load_data(file = filename, sheet = "Neonatal intensive care ")
 dat_baby_bristol <- process_data(dat_baby)
 plot_circular_heatmap(df=dat_baby_bristol,  "Neonatal \nintensive care ")
+```
 
+- NBT and UHB have similar number of NICU beds (30/31)
+- NBT was busier (92% mean occupancy), with 100% beds taken from 24-Dec to 23-Jan
+- At UHB less beds were occupied from 24-Dec to 5-Jan `r emo::ji("christmas")`
+
+
+
+```{r}
+# mean occupancy
+round(colMeans(dat_baby_bristol$wide_data),2)
+
+# show the total number of available beds in each NHS Trust
 dat_baby_bristol$full_bristol_data  %>%
   select(Name, abbr, variable, open_beds = value) %>% 
   filter(variable == "Neo Int Care Open") %>% 
   mutate(abbr = gsub("\n", "", abbr)) %>% 
   count(Name, abbr, open_beds) %>% filter(n>10) %>% select(-n) 
 ```
+
+<br>
+<br>
+
+#### Final thoughts
+
+- Critical care bed occupancy was high during the winter season pre-Covid
+- High occupancy in neonatal intensive care may not be winter-season related
+- Overall, there were less adults and children in critical care over the holiday season `r emo::ji("christmas")` `r emo::ji("christmas")` `r emo::ji("christmas")`
+
+<br>
+
+<center>
+
+![](https://media.tenor.com/iLT5yyoJg2oAAAAC/christmas-miracle.gif)
+
+</center>
 
 
