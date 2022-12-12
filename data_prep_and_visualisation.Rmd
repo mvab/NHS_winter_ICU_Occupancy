@@ -56,21 +56,27 @@ We are going to look at critical care bed occupancy for adults, children (<14 ye
 
 
 ```{r}
-library(dplyr, warn.conflicts=FALSE)
+library(dplyr)
 library(tidyr)
 library(tibble)
 library(openxlsx)
-suppressPackageStartupMessages(library(lubridate))
+library(kableExtra)
+library(lubridate)
 
-suppressPackageStartupMessages(library(ComplexHeatmap))
-suppressPackageStartupMessages(library(circlize))
-
-# options for jupyter
-options(warn=-1)
-options(jupyter.plot_scale=1)
+library(ComplexHeatmap)
+library(circlize)
 
 filename ="Winter-data-timeseries-20190307.xlsx"
 ```
+
+```{r echo=F}
+kable_it<-function(df){
+  df %>%
+    kable(.) %>%
+    kable_styling()
+}
+```
+
 
 #### Load data
 
@@ -115,7 +121,7 @@ load_data <- function(file, sheet){
 
 
 dat_adult <- load_data(file = filename, sheet = "Adult critical care")
-head(dat_adult)
+dat_adult %>% head %>% kable_it()
 ```
 
 #### Process data
@@ -165,7 +171,7 @@ process_data <- function(data){
 }
 
 dat_adult_bristol <- process_data(dat_adult)
-head(dat_adult_bristol$wide_data)
+dat_adult_bristol$wide_data %>% head() %>% kable_it()
 ```
 
 
@@ -215,20 +221,23 @@ plot_circular_heatmap <- function(df,  title_prefix){
 plot_circular_heatmap(df=dat_adult_bristol,  "Adult critical care")
 ```
 
- - UBH was very busy during the entire winter season (mean occupancy 93%) 
+ - UBH (n_beds=55) was very busy during the entire winter season (mean occupancy 93%) 
  - The only days with occupancy < 80% at UHB were Christmas and Boxing Days `r emo::ji("christmas")`
- - NBT was busy too (mean occupancy 76%), but there were less people in critical care in NBT over the entire holiday season (~ 20-Dec to 6-Jan) `r emo::ji("christmas")`)
+ - NBT (n_beds=46) was busy too (mean occupancy 76%), but there were less people in critical care in NBT over the entire holiday season (~ 20-Dec to 6-Jan) `r emo::ji("christmas")`)
 
 
 ```{r}
 # mean occupancy
-round(colMeans(dat_adult_bristol$wide_data),2)
+round(colMeans(dat_adult_bristol$wide_data),2) 
+```
 
+```{r}
 # show the total number of available beds in each NHS Trust
 dat_adult_bristol$full_bristol_data  %>% 
   select(Name, abbr, variable, open_beds = value) %>% 
   mutate(abbr = gsub("\n", "", abbr)) %>% 
-  filter(variable == "CC Adult Open") %>% count(Name, abbr, open_beds) %>% filter(n>1) %>% select(-n)
+  filter(variable == "CC Adult Open") %>% 
+  count(Name, abbr, open_beds) %>% filter(n>1) %>% select(-n)  %>% kable_it()
 ```
 
 <br>
@@ -249,13 +258,15 @@ plot_circular_heatmap(df=dat_child_bristol,  "Paedeatric \nintensive care")
 ```{r}
 # mean occupancy
 round(colMeans(dat_child_bristol$wide_data),2)
+```
 
+```{r}
 # show the total number of available beds in each NHS Trust
 dat_child_bristol$full_bristol_data  %>% 
   select(Name, abbr, variable, open_beds = value) %>% 
   filter(variable == "Paed Int Care Open") %>% 
   mutate(abbr = gsub("\n", "", abbr)) %>% 
-  count(Name, abbr, open_beds) %>% select(-n)
+  count(Name, abbr, open_beds) %>% select(-n) %>% kable_it()
 ```
 
 
@@ -279,13 +290,15 @@ plot_circular_heatmap(df=dat_baby_bristol,  "Neonatal \nintensive care ")
 ```{r}
 # mean occupancy
 round(colMeans(dat_baby_bristol$wide_data),2)
+```
 
+```{r}
 # show the total number of available beds in each NHS Trust
 dat_baby_bristol$full_bristol_data  %>%
   select(Name, abbr, variable, open_beds = value) %>% 
   filter(variable == "Neo Int Care Open") %>% 
   mutate(abbr = gsub("\n", "", abbr)) %>% 
-  count(Name, abbr, open_beds) %>% filter(n>10) %>% select(-n) 
+  count(Name, abbr, open_beds) %>% filter(n>10) %>% select(-n)  %>% kable_it()
 ```
 
 <br>
