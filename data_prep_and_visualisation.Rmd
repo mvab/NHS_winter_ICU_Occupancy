@@ -27,12 +27,12 @@ Visualisation tools: R packages **circilize** ([https://github.com/jokergoo/circ
 
 ### Background
 
-The dataset contains critical care bed occupancy in all NHS Trusts across England, December 2018-February 2019 (pre-COVID data). 
+The dataset contains critical care bed occupancy in all NHS Trusts across England from December 2018 to February 2019 (pre-COVID data). 
 
-In this analysis/visulisation I will focus on Bristol data only. Hospitals in Bristol are split between two NHS Trusts - _North Bristol NHS Trust_ and _University Hospitals Bristol and Weston NHS Foundation Trust_, which cover north and centre/south of the city, respectively. For context, below is list of hostpitals that belong to the two trusts [[source](https://en.wikipedia.org/wiki/Healthcare_in_Bristol)]:
+In this analysis/visualisation, I will focus on Bristol data only. Hospitals in Bristol are split between two NHS Trusts - _North Bristol NHS Trust_ and _University Hospitals Bristol and Weston NHS Foundation Trust_, which cover the north and centre/south of the city, respectively. For context, below is the list of hospitals that belong to the two trusts [[source](https://en.wikipedia.org/wiki/Healthcare_in_Bristol)]:
 
 
-North Bristol NHS Trust  (**NBT**) manages hospitals in the north of the Bristol and South Gloucestershire.
+North Bristol NHS Trust  (**NBT**) manages hospitals in the north of Bristol and South Gloucestershire.
 
 - Southmead Hospital
 - Cossham Memorial Hospital
@@ -126,7 +126,7 @@ dat_adult %>% head %>% kable_it()
 
 #### Process data
 
-Subsetting the data to Bristol NHS Trusts, and exctracting bed occupancy rates for each date in the two Trusts.
+Subsetting the data to Bristol NHS Trusts, and extracting bed occupancy rates for each date in the two NHS Trusts.
 
 ```{r}
 
@@ -223,7 +223,7 @@ plot_circular_heatmap(df=dat_adult_bristol,  "Adult critical care")
 
  - UBH (n_beds=55) was very busy during the entire winter season (mean occupancy 93%) 
  - The only days with occupancy < 80% at UHB were Christmas and Boxing Days `r emo::ji("christmas")`
- - NBT (n_beds=46) was busy too (mean occupancy 76%), but there were less people in critical care in NBT over the entire holiday season (~ 20-Dec to 6-Jan) `r emo::ji("christmas")`)
+ - NBT (n_beds=46) was busy too (mean occupancy 76%), but there were fewer people in critical care in NBT over the entire holiday season (~ 20-Dec to 6-Jan) `r emo::ji("christmas")`)
 
 
 ```{r}
@@ -251,7 +251,7 @@ dat_child_bristol <- process_data(dat_child)
 plot_circular_heatmap(df=dat_child_bristol,  "Paedeatric \nintensive care")
 ```
 
-- Paediatric intensive care in Bristol is only available at UHB (likely at he _Bristol Royal Hospital for Children_)
+- Paediatric intensive care in Bristol is only available at UHB (likely at the _Bristol Royal Hospital for Children_)
 - Therefore, no data is presented for NBT in the plot
 - There was quite "low" bed occupancy in the paediatric unit between 25-Dec and 7-Jan: < 50% `r emo::ji("christmas")` `r emo::ji("christmas")` `r emo::ji("christmas")`
 
@@ -281,9 +281,9 @@ dat_baby_bristol <- process_data(dat_baby)
 plot_circular_heatmap(df=dat_baby_bristol,  "Neonatal \nintensive care ")
 ```
 
-- NBT and UHB have similar number of NICU beds (30/31)
+- NBT and UHB have a similar number of NICU beds (30/31)
 - NBT was busier (92% mean occupancy), with 100% beds taken from 24-Dec to 23-Jan
-- At UHB less beds were occupied from 24-Dec to 5-Jan `r emo::ji("christmas")`
+- At UHB a smaller number of beds were occupied from 24-Dec to 5-Jan `r emo::ji("christmas")`
 
 
 
