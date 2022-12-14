@@ -222,6 +222,12 @@ plot_circular_heatmap <- function(df,  title_prefix){
 plot_circular_heatmap(df=dat_adult_bristol,  "Adult critical care")
 ```
 
+```{r echo=F}
+tiff("figs/icu_adult_bristol.tiff", height=13, width=13, units = "cm", res = 300) 
+plot_circular_heatmap(df=dat_adult_bristol,  "Adult critical care")
+dev.off()
+```
+
  - UBH (n_beds=55) was very busy during the entire winter season (mean occupancy 93%) 
  - The only days with occupancy < 80% at UHB were Christmas and Boxing Days `r emo::ji("christmas")`
  - NBT (n_beds=46) was busy too (mean occupancy 76%), but there were fewer people in critical care in NBT over the entire holiday season (~ 20-Dec to 6-Jan) `r emo::ji("christmas")`)
@@ -252,6 +258,12 @@ dat_child_bristol <- process_data(dat_child)
 plot_circular_heatmap(df=dat_child_bristol,  "Paedeatric \nintensive care")
 ```
 
+```{r echo=F}
+tiff("figs/icu_paediatric_bristol.tiff", height=13, width=13, units = "cm", res = 300) 
+plot_circular_heatmap(df=dat_adult_bristol,  "Adult critical care")
+dev.off()
+```
+
 - Paediatric intensive care in Bristol is only available at UHB (likely at the _Bristol Royal Hospital for Children_), with mean occupancy 65%
 - Therefore, no data is presented for NBT in the plot
 - There was quite "low" bed occupancy in the paediatric unit between 25-Dec and 7-Jan: < 50% `r emo::ji("christmas")` `r emo::ji("christmas")` `r emo::ji("christmas")`
@@ -280,6 +292,12 @@ Infants (< 6 months)
 dat_baby <- load_data(file = filename, sheet = "Neonatal intensive care ")
 dat_baby_bristol <- process_data(dat_baby)
 plot_circular_heatmap(df=dat_baby_bristol,  "Neonatal \nintensive care ")
+```
+
+```{r echo=F}
+tiff("figs/icu_neonatal_bristol.tiff", height=13, width=13, units = "cm", res = 300) 
+plot_circular_heatmap(df=dat_adult_bristol,  "Adult critical care")
+dev.off()
 ```
 
 - NBT and UHB have a similar number of NICU beds (30/31)
