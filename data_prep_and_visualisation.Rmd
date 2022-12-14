@@ -223,7 +223,7 @@ plot_circular_heatmap(df=dat_adult_bristol,  "Adult critical care")
 ```
 
 ```{r echo=F}
-tiff("figs/icu_adult_bristol.tiff", height=13, width=13, units = "cm", res = 300) 
+tiff("figs/icu_adult_bristol.tiff", height=13, width=13, units = "cm", res = 150) 
 plot_circular_heatmap(df=dat_adult_bristol,  "Adult critical care")
 dev.off()
 ```
@@ -259,7 +259,7 @@ plot_circular_heatmap(df=dat_child_bristol,  "Paedeatric \nintensive care")
 ```
 
 ```{r echo=F}
-tiff("figs/icu_paediatric_bristol.tiff", height=13, width=13, units = "cm", res = 300) 
+tiff("figs/icu_paediatric_bristol.tiff", height=13, width=13, units = "cm", res = 150) 
 plot_circular_heatmap(df=dat_adult_bristol,  "Adult critical care")
 dev.off()
 ```
@@ -295,7 +295,7 @@ plot_circular_heatmap(df=dat_baby_bristol,  "Neonatal \nintensive care ")
 ```
 
 ```{r echo=F}
-tiff("figs/icu_neonatal_bristol.tiff", height=13, width=13, units = "cm", res = 300) 
+tiff("figs/icu_neonatal_bristol.tiff", height=13, width=13, units = "cm", res = 150) 
 plot_circular_heatmap(df=dat_adult_bristol,  "Adult critical care")
 dev.off()
 ```
