@@ -98,15 +98,15 @@ load_data <- function(file, sheet){
       data_values <- dat %>% select(X4:X277)
       
       # vector of dates read in numerical format
-      dates_numerical <- data_values[2, 2:227]
+      dates_numerical <- data_values[2, 2:274]
       # vector of value types
-      colnames_vector <- data_values[3, 2:227]
+      colnames_vector <- data_values[3, 2:274]
       
       # create value type+date vector
       new_names <-paste(colnames_vector, dates_numerical,sep='_')
       
       # keep only values + add new colnames
-      data_values_only <- data_values[4:138,1:227]
+      data_values_only <- data_values[4:138,1:274]
       colnames(data_values_only) <- c("Name", new_names )
       
       # pivot data to long format; split type_date; convert date_numerical to Date; add NHS Trust labels
@@ -143,11 +143,12 @@ process_data <- function(data){
       data_region_occ <- data_region %>% 
                 filter(grepl("Occupancy", variable))
         
-      # pivot data to wide format
+      # pivot data to wide format and keep winter only
       data_region_occ_wide <- data_region_occ %>% 
                  pivot_wider(id_cols=date, names_from = abbr, values_from = value, values_fill = NA) %>% 
                  # extarct month from the date and create column with month name labels (set order with factor)
                  mutate(month = lubridate::month(date, label=T, abbr=F)) %>%
+                 filter(month %in% c("December", "January" , "February")) %>% 
                  mutate(month = factor(month, levels = c("December", "January" , "February"))) %>% 
                  # create dat in 01-Dec format for the plot
                  mutate(DayDate=lubridate::day(date)) %>%
@@ -201,7 +202,7 @@ plot_circular_heatmap <- function(df,  title_prefix){
         if(CELL_META$sector.numeric.index == 1) { # the last sector
           cn = rev(colnames(df))
           n = length(cn)
-          circos.text(x = rep(CELL_META$cell.xlim[2]+49, n) + convert_x(1, "mm"),  # 49 is a magic number
+          circos.text(x = rep(CELL_META$cell.xlim[2]+63, n) + convert_x(1, "mm"),  # 63 is a magic number for moving track labels around the axis
                       y = 1:n - 3, 
                       labels = cn, 
                       cex = 0.8, 
@@ -237,7 +238,7 @@ dat_adult_bristol$full_bristol_data  %>%
   select(Name, abbr, variable, open_beds = value) %>% 
   mutate(abbr = gsub("\n", "", abbr)) %>% 
   filter(variable == "CC Adult Open") %>% 
-  count(Name, abbr, open_beds) %>% filter(n>1) %>% select(-n)  %>% kable_it()
+  count(Name, abbr, open_beds) %>% filter(n>2) %>% select(-n)  %>% kable_it()
 ```
 
 <br>
@@ -251,7 +252,7 @@ dat_child_bristol <- process_data(dat_child)
 plot_circular_heatmap(df=dat_child_bristol,  "Paedeatric \nintensive care")
 ```
 
-- Paediatric intensive care in Bristol is only available at UHB (likely at the _Bristol Royal Hospital for Children_)
+- Paediatric intensive care in Bristol is only available at UHB (likely at the _Bristol Royal Hospital for Children_), with mean occupancy 65%
 - Therefore, no data is presented for NBT in the plot
 - There was quite "low" bed occupancy in the paediatric unit between 25-Dec and 7-Jan: < 50% `r emo::ji("christmas")` `r emo::ji("christmas")` `r emo::ji("christmas")`
 
