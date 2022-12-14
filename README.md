@@ -51,7 +51,7 @@ We are going to look at critical care bed occupancy for adults, children (<14 ye
 
 #### Adult critical care
 
-<img src="figs/icu_adult_bristol.tiff" width="600"/>
+<img src="figs/icu_adult_bristol.png" width="600"/>
 
  - UBH (n_beds=55) was very busy during the entire winter season (mean occupancy 93%) 
  - The only days with occupancy < 80% at UHB were Christmas and Boxing Days :santa: :gift:
@@ -62,7 +62,7 @@ We are going to look at critical care bed occupancy for adults, children (<14 ye
 
 Children (< 14 years)
 
-<img src="figs/icu_paediatric_bristol.tiff" width="600"/>
+<img src="figs/icu_paediatric_bristol.png" width="600"/>
 
 - Paediatric intensive care in Bristol is only available at UHB (likely at the _Bristol Royal Hospital for Children_), with mean occupancy 65%
 - Therefore, no data is presented for NBT in the plot
@@ -74,7 +74,7 @@ Children (< 14 years)
 
 Infants (< 6 months)
 
-<img src="figs/icu_neonatal_bristol.tiff" width="600"/>
+<img src="figs/icu_neonatal_bristol.png" width="600"/>
 
 - NBT and UHB have a similar number of NICU beds (30/31)
 - NBT was busier (92% mean occupancy), with 100% beds taken from 24-Dec to 23-Jan
